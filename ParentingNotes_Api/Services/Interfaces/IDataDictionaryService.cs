@@ -1,4 +1,4 @@
-﻿using ParentingNotes_Api.Models;
+﻿using ParentingNotes_Api.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ParentingNotes_Api.Services.Interfaces
 {
-    public interface ITokenService
+    public interface IDataDictionaryService
     {
-        Task<string> GetToken(string openid);
+        Task<ApiResult<List<string>>> getItemsAsync(string item_name);
     }
 }

@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParentingNotes_Api.Services.Interfaces
 {
-    public interface ITokenService
+    public interface INoteNaipingService:INoteBaseService<NoteNaiping>
     {
-        Task<string> GetToken(string openid);
     }
 }

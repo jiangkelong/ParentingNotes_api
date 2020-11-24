@@ -1,18 +1,32 @@
-﻿namespace ParentingNotes_Api.Models
+﻿using SqlSugar;
+
+namespace ParentingNotes_Api.Models
 {
-    public class User
+    /// <summary>
+    /// 用户实体类
+    /// </summary>
+    [SugarTable("user")]
+    public class User : BaseModel
     {
         /// <summary>
-        /// ID
+        /// 微信标识符
         /// </summary>
-        public int id { get; set; }
+        public string openId { get; set; }
         /// <summary>
-        /// 姓名
+        /// 微信平台唯一标识符
         /// </summary>
-        public string username { get; set; }
+        public string unionId { get; set; }
         /// <summary>
-        /// 密码
+        /// 微信昵称
         /// </summary>
-        public string password { get; set; }
+        public string nickname { get; set; }
+        /// <summary>
+        /// 微信头像url
+        /// </summary>
+        public string avatarUrl { get; set; }
+        /// <summary>
+        /// 更新时间
+        /// </summary>
+        public string updatedOn { get; set; }
     }
 }

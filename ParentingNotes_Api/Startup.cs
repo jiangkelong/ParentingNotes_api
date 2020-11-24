@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using ParentingNotes_Api.Common;
+using ParentingNotes_Api.Services;
 using ParentingNotes_Api.Services.Implements;
 using ParentingNotes_Api.Services.Interfaces;
 using System;
@@ -32,7 +34,26 @@ namespace ParentingNotes_Api
                     opt.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();//json字符串大小写原样输出
                 });
 
+            //程序启动时在IServicesCollection中注册，这样在程序中就能获取到HttpContextAccessor，并用来访问HttpContext。
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            #region 依赖注入
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IBabyService, BabyService>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IDataDictionaryService, DataDictionaryService>();
+
+
+            services.AddScoped<INoteSummaryService, NoteSummaryService>();
+            services.AddScoped<INoteNaipingService, NoteNaipingService>();
+            services.AddScoped<INoteNiaokuService, NoteNiaokuService>();
+            services.AddScoped<INoteShuijiaoService, NoteShuijiaoService>();
+            services.AddScoped<INoteHuwaiService, NoteHuwaiService>();
+            services.AddScoped<INoteWanshuaService, NoteWanshuaService>();
+
+            //services.AddScoped<IDecryptService, DecryptService>();
+            #endregion
 
             services.Configure<JwtSetting>(Configuration.GetSection("JwtSetting"));
 
@@ -72,8 +93,11 @@ namespace ParentingNotes_Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IHttpContextAccessor svp)
         {
+            Config._httpContextAccessor = svp;
+            Config._iHostingEnvironment = env;
+
             app.UseAuthentication();
 
             if (env.IsDevelopment())
@@ -82,6 +106,7 @@ namespace ParentingNotes_Api
             }
 
             app.UseMvc();
+            app.UseStaticFiles();//可访问wwwroot下的静态文件
         }
     }
 }
